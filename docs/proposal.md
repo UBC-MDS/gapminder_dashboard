@@ -8,7 +8,7 @@ TBC
 
 TBC
 
-## Usage scenarios
+## Usage Scenario
 
 Sam is an economics teacher at a high school in Vancouver. In preparation to teach a module in macro socio-economics, he wants to introduce his class to real world data and have them challenge and discuss ideas about how the world is perceived.
 
