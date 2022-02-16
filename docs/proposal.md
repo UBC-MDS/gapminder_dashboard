@@ -2,17 +2,22 @@
 
 ## Motivation and purpose
 
-- Why are creating this dashboard?
+### Why are creating this dashboard?
+
 The objective is to investigate what the young population of students know and don't know about basic global patterns and macro-trends and educate the intended users on global development trends. This dashboard has been developed to communicate insights about historical social/economic trends and create a better understanding of using and teaching statistics.
 
-- Who is the target audience, and what role are we embodying?
+### Who is the target audience, and what role are we embodying?
+
 This dashboard is designed to be an educational tool. Hence we are targeting the below audience.
-  - **Students** 
+
+- **Students** 
   Gapminder provides reliable statistics for nearly every aspect of global development, such as population growth, life expectancy, standard of living, etc. Students can interact with this rich data using this dashboard to get a better picture of the progress made on global development over time. These interactions should empower the students and help change their perceptions of the global world. Also, students will realize the importance of using statistics to investigate issues like global development and can utilize the skills learned in this endeavour in other aspects of their academic lives.
-  - **Educators**
+
+- **Educators**
   Educators can use the dashboard as a tool for educating their student on the trends in global development and for teaching statistics. They can also use this dashboard to explain the optimal use of data visualization.
 
-- What problem could this dashboard solve for the intended user?
+### What problem could this dashboard solve for the intended user?
+
 This dashboard intends to educate with a fact-based worldview that everyone can understand and help the user overcome misconceptions and develop a better understanding of statistics.
 
 ## Description of the data
