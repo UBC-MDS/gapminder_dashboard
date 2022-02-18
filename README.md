@@ -9,3 +9,5 @@ The landing page of the dashboard is designed to have five filters at the left, 
 The global map is presented at the bottom of the dashboard with tooltip for each country to show the target of the study data related to the selected countries. After choosing a continent in the filter section, just the selected continent stay colourful and all other turn to grey. The level of colour shading for selected continent would be based on the value of the target of study. To the right of the global map, there is a bar plot which shows the top ten countries with highest value for target of study.
 
 ## Dashboard Sketch Design
+
+![sketch of the app](img/app_sketch.png "App Sketch")
