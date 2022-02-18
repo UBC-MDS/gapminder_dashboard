@@ -11,3 +11,17 @@ The global map is presented at the bottom of the dashboard with tooltip for each
 ## Dashboard Sketch Design
 
 ![sketch of the app](img/app_sketch.png "App Sketch")
+
+
+## Contributors
+
+This app was developed by the following Master of Data Science program candidates at the University of the British Columbia:
+
+- Mel Liow                [@mel-liow](https://github.com/mel-liow)
+- Anupriya Srivastava     [@Anupriya-Sri](https://github.com/Anupriya-Sri)
+- Mohammadreza Mirzazadeh [@rezam747](https://github.com/rezam747)
+- Arijeet CHATTERJEE      [@arijc76](https://github.com/arijc76)
+
+## License
+
+`gapminder_dashboard` was created by Mel, Anupriya, Reza and Arijeet. It is licensed under the terms of the MIT [license](https://github.com/UBC-MDS/gapminder_dashboard/blob/main/LICENSE).
