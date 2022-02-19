@@ -22,7 +22,7 @@ This dashboard intends to educate with a fact-based worldview that everyone can 
 
 ## Description of the data
 
-TBC
+The gapminder dataset is collected and maintained by Gapminder.org, a non-for-profit organization trying to eliminate social misconceptions from our societies. For this project, we have focused on a subset of nine (9) social parameters which we wanted to analyse. Data on these selected parameters is available from the year 1800 to 2018, and is collected at country level. Overall, there are 38982 observations. The description of columns in dataset is given below:
 
 ## Usage Scenario
 
