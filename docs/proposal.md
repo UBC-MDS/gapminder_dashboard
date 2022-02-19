@@ -2,7 +2,7 @@
 
 ## Motivation and purpose
 
-### Why are creating this dashboard?
+### Why are we creating this dashboard?
 
 The objective is to investigate what the young population of students know and don't know about basic global patterns and macro-trends and educate the intended users on global development trends. This dashboard has been developed to communicate insights about historical social/economic trends and create a better understanding of using and teaching statistics.
 
@@ -22,7 +22,22 @@ This dashboard intends to educate with a fact-based worldview that everyone can 
 
 ## Description of the data
 
-TBC
+The gapminder dataset is collected and maintained by \href{https://www.gapminder.org/}{Gapminder.org}, a non-for-profit organization trying to eliminate social misconceptions from our societies. For this project, we have focused on a subset of nine (9) social parameters which we wanted to analyse. Data on these selected parameters is available from the year 1800 to 2018, and is collected at country level. Overall, there are 38982 observations. The description of columns in dataset is given below:
+
+- `year`: Year of observation
+- `country`: Country name
+- `region`: Continent the country belongs to 
+- `sub_region`: Sub regions as defined 
+- `population`: Population in the country at each year
+- `income_group`: Income group as specified by the world bank
+- `income`: GDP per capita (in USD) adjusted for purchasing power
+- `life_expectancy`: Average years a newborn child would live if mortality patterns stay the same
+- `children_per_woman`: Number of children born to each woman
+- `child_mortality`: Deaths of children under 5 years of age per 1000 live births
+- `pop_density`: Average number of people per km2
+- `co2_per_capita`: CO2 emissions from fossil fuels (tonnes per capita)
+- `years_in_school_men`: Average years attending primary, secondary, and tertiary school for 25-36 years old men
+- `years_in_school_women`: Average years attending primary, secondary, and tertiary school for 25-36 years old women
 
 ## Usage Scenario
 
