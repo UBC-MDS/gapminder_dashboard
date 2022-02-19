@@ -2,7 +2,7 @@
 
 ## Motivation and purpose
 
-### Why are creating this dashboard?
+### Why are we creating this dashboard?
 
 The objective is to investigate what the young population of students know and don't know about basic global patterns and macro-trends and educate the intended users on global development trends. This dashboard has been developed to communicate insights about historical social/economic trends and create a better understanding of using and teaching statistics.
 
