@@ -15,8 +15,8 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
 # Load data
 # Data link to be changed to local csv file in data/raw folder
-gap_url = 'https://raw.githubusercontent.com/UofTCoders/workshops-dc-py/master/data/processed/world-data-gapminder.csv'
-gap = pd.read_csv(gap_url, parse_dates=['year'])
+# gap_url = 'https://raw.githubusercontent.com/UofTCoders/workshops-dc-py/master/data/processed/world-data-gapminder.csv'
+gap = pd.read_csv('data/raw/gapminder_2018.csv', parse_dates=['year'])
 
 # Define helper code
 
@@ -26,8 +26,6 @@ opt_dropdown_years = [{'label': year, 'value': year}
 # Selection filter options - Region
 opt_radio_regions = [{'label': 'All', 'value': 'All'}] + [{'label': region, 'value': region}
                                             for region in np.unique(gap['region'])]
-
-print(opt_radio_regions)
 
 # Selection filter options - Target of the study - Y-axis of the plots
 # TBD - Other options to be added 
@@ -170,11 +168,12 @@ app.layout = html.Div(id="main", children=page_layout)
     Output('scatter', 'srcDoc'),
     Input('year_input', 'value'),
     Input('region_input', 'value'),
-    Input('target_input_y', 'value'))
-def plot_lifeexp_gdp(year, region, target):
+    Input('target_input_y', 'value'),
+    Input('target_input_x', 'value'))
+def plot_lifeexp_gdp(year, region, target_y, target_x):
     # Define plot label depending on target
     # TBD - Other options to be added 
-    if target == 'life_expectancy':
+    if target_y == 'life_expectancy':
         ylabel = 'Life Expectancy'
 
     # Filter dataframe depending on year and region choice
@@ -187,8 +186,8 @@ def plot_lifeexp_gdp(year, region, target):
     gap_filtered = gap.loc[idx]
     
     scatter_pop_lifeexp = alt.Chart(gap_filtered).mark_circle().encode(
-        x=alt.X('income', title='GDP'),
-        y=alt.Y(target, title=ylabel),
+        x=alt.X(target_x, title=target_x),
+        y=alt.Y(target_y, title=target_y),
         color='region',
         size='population'
         ).properties(
