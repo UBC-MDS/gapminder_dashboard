@@ -1,0 +1,5 @@
+pandas
+gunicorn
+plotly
+altair
+dash
