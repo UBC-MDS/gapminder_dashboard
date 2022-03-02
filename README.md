@@ -13,6 +13,17 @@ The global map is presented at the bottom of the dashboard with a tooltip for ea
 
 ![sketch of the app](img/app_sketch.png "App Sketch")
 
+## Usage and Installation
+
+```bash
+pip install -r requirements.txt
+```
+
+To run the application locally:
+
+```bash
+python src/app.py
+```
 
 ## Contributors
 
