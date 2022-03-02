@@ -1,3 +1,4 @@
+from pydoc import classname
 import pandas as pd
 import numpy as np
 
@@ -7,44 +8,36 @@ from dash import Dash, html, dcc, Input, Output
 import dash_bootstrap_components as dbc
 
 import altair as alt
+from vega_datasets import data as datasets
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = dash.Dash(__name__)
+
 # server = app.server
 
 # Load data
-# Data link to be changed to local csv file in data/raw folder
-# gap_url = 'https://raw.githubusercontent.com/UofTCoders/workshops-dc-py/master/data/processed/world-data-gapminder.csv'
-gap = pd.read_csv("data/raw/gapminder_2018.csv", parse_dates=["year"])
+gapminder = pd.read_csv(
+    "data/processed/gapminder_processed.csv", parse_dates=["year"]
+)
+
+# create clean country list
+country_list = gapminder[["name", "id"]].drop_duplicates()
 
 # Define helper code
 
+"""Options"""
 # Selection filter options - Years
 opt_dropdown_years = [
-    {"label": year, "value": year} for year in np.unique(gap["year"].dt.year)
+    {"label": year, "value": year}
+    for year in np.unique(gapminder["year"].dt.year)
 ]
 # Selection filter options - Region
 opt_radio_regions = [{"label": "All", "value": "All"}] + [
-    {"label": region, "value": region} for region in np.unique(gap["region"])
+    {"label": region, "value": region}
+    for region in np.unique(gapminder["region"])
 ]
 
-# Selection filter options - Target of the study - Y-axis of the plots
-# TBD - Other options to be added
-opt_dropdown_target_y = [
-    {"label": "Population", "value": "population"},
-    {"label": "Income Group", "value": "income_group"},
-    {"label": "GDP", "value": "income"},
-    {"label": "Life Expectancy", "value": "life_expectancy"},
-    {"label": "Children per woman", "value": "children_per_woman"},
-    {"label": "Child Mortality", "value": "child_mortality"},
-    {"label": "Population density", "value": "pop_density"},
-    {"label": "CO2 per capita", "value": "co2_per_capita"},
-    {"label": "Avg years in school (men)", "value": "years_in_school_men"},
-    {"label": "Avg years in school (men)", "value": "years_in_school_women"},
-]
-
-# Selection filter options - Target of the study - X-axis of the plots
-# TBD - Other options to be added
-opt_dropdown_target_x = [
+# Selection filter options - Target of the study
+opt_dropdown_targets = [
     {"label": "Population", "value": "population"},
     {"label": "Income Group", "value": "income_group"},
     {"label": "GDP", "value": "income"},
@@ -60,135 +53,119 @@ opt_dropdown_target_x = [
 # Selection filter country
 opt_dropdown_country = [
     {"label": country, "value": country}
-    for country in np.unique(gap["country"])
+    for country in np.unique(gapminder["country"])
+]
+
+""" Layouts """
+
+filter_panel = [
+    ### Top Header Text
+    html.H2("Gapminder Dashboard"),
+    html.Br(),
+    html.Br(),
+    #### Add LHS selection filters here
+    html.H3("Filters", className="text-primary"),
+    html.H5("Target of Study", className="text-dark"),
+    dcc.Dropdown(
+        id="target_input_y",
+        value="life_expectancy",
+        options=opt_dropdown_targets,
+        className="dropdown",
+    ),
+    html.Br(),
+    dcc.Dropdown(
+        id="target_input_x",
+        value="income",
+        options=opt_dropdown_targets,
+        className="dropdown",
+    ),
+    html.Br(),
+    html.H5("Country", className="text-dark"),
+    dcc.Dropdown(
+        id="country_input",
+        value="Afghanistan",
+        options=opt_dropdown_country,
+        className="dropdown",
+    ),
+    html.H5("Region", className="text-dark"),
+    dcc.RadioItems(
+        id="region_input",
+        value="All",
+        options=opt_radio_regions,
+        className="radio",
+    ),
+    html.Br(),
+    html.H5("Year", className="text-dark"),
+    dcc.Dropdown(
+        id="year_input",
+        value=1970,
+        options=opt_dropdown_years,
+        className="dropdown",
+    ),
+]
+
+plot_body = [
+    dbc.Row(
+        [
+            ### Top row images go here
+            dbc.Col(
+                [
+                    ### Plot 1
+                    html.H2("Life Expectancy world map"),
+                    html.Iframe(
+                        id="world_map",
+                        className="world-map",
+                    ),
+                ],
+                className="col",
+            ),
+            dbc.Col(
+                [
+                    ### Plot 2 goes here
+                    html.H2("Top 10 countries"),
+                ],
+            ),
+        ],
+        className="row",
+    ),
+    dbc.Row(
+        [
+            ### Second row plots go here
+            dbc.Col(
+                [
+                    ### Plot 3
+                    html.H2("Life Expectancy during the time chart"),
+                ],
+                className="col",
+            ),
+            dbc.Col(
+                [
+                    ### Plot 4 goes here
+                    html.H2("Life expectancy vs GDP Plot"),
+                    html.Iframe(id="bubble_plot", className="bubble-plot"),
+                ],
+            ),
+        ],
+        className="row",
+    ),
 ]
 
 # Define page layout
-page_layout = [
-    dbc.Container(
-        [
-            dbc.Row(
-                [
-                    ## one third left criteria selection bar
-                    dbc.Col(
-                        [
-                            ### Top Header Text
-                            html.H2("Gapminder Dashboard"),
-                            html.Br(),
-                            html.Br(),
-                            #### Add LHS selection filters here
-                            html.H3("Filters", className="text-primary"),
-                            html.H5("Target of Study", className="text-dark"),
-                            dcc.Dropdown(
-                                id="target_input_y",
-                                value="life_expectancy",
-                                options=opt_dropdown_target_y,
-                                className="dropdown",
-                            ),
-                            html.Br(),
-                            dcc.Dropdown(
-                                id="target_input_x",
-                                value="income",
-                                options=opt_dropdown_target_x,
-                                className="dropdown",
-                            ),
-                            html.Br(),
-                            html.H5("Country", className="text-dark"),
-                            dcc.Dropdown(
-                                id="country_input",
-                                value="Afghanistan",
-                                options=opt_dropdown_country,
-                                className="dropdown",
-                            ),
-                            html.H5("Region", className="text-dark"),
-                            dcc.RadioItems(
-                                id="region_input",
-                                value="All",
-                                options=opt_radio_regions,
-                                className="radio",
-                            ),
-                            html.Br(),
-                            html.H5("Year", className="text-dark"),
-                            dcc.Dropdown(
-                                id="year_input",
-                                value=1970,
-                                options=opt_dropdown_years,
-                                className="dropdown",
-                            ),
-                        ],
-                        width="4",
-                        className="one_third_col_left_selection",
-                    ),
-                    ## two thirds main plots area
-                    dbc.Col(
-                        [
-                            dbc.Row(
-                                [
-                                    ### Top row images go here
-                                    dbc.Col(
-                                        [
-                                            ### Plot 1
-                                            html.H2(
-                                                "Life Expectancy world map"
-                                            )
-                                        ]
-                                    ),
-                                    dbc.Col(
-                                        [
-                                            ### Plot 2 goes here
-                                            html.H2("Top 10 countries"),
-                                        ]
-                                    ),
-                                ]
-                            ),
-                            dbc.Row(
-                                [
-                                    ### Second row plots go here
-                                    dbc.Col(
-                                        [
-                                            ### Plot 3
-                                            html.H2(
-                                                "Life Expectancy during the time chart"
-                                            ),
-                                        ],
-                                        width="4",
-                                    ),
-                                    dbc.Col(
-                                        [
-                                            ### Plot 4 goes here
-                                            html.H2(
-                                                "Life expectancy vs GDP Plot"
-                                            ),
-                                            html.Iframe(
-                                                id="scatter",
-                                                style={
-                                                    "border-width": "0px",
-                                                    "width": "100%",
-                                                    "height": "500px",
-                                                },
-                                            ),
-                                        ],
-                                        width="4",
-                                    ),
-                                ]
-                            ),
-                        ],
-                        width="8",
-                        className="two_third_main_display",
-                    ),
-                ]
-            )
-        ],
-        fluid=True,
-    )
-]
+page_layout = html.Div(
+    className="page_layout",
+    children=[
+        dbc.Col(filter_panel, className="panel"),
+        dbc.Col(plot_body, className="body"),
+    ],
+)
+
 
 # Overall layout
-app.layout = html.Div(id="main", children=page_layout)
+app.layout = html.Div(id="main", className="app", children=page_layout)
 
 # Set up callbacks/backend
 @app.callback(
-    Output("scatter", "srcDoc"),
+    Output("bubble_plot", "srcDoc"),
     Input("year_input", "value"),
     Input("region_input", "value"),
     Input("target_input_y", "value"),
@@ -203,13 +180,14 @@ def plot_lifeexp_gdp(year, region, target_y, target_x):
     # Filter dataframe depending on year and region choice
     # If region == 'All', then only filter on year, else filter on both year and region
     if region == "All":
-        idx = np.where((gap["year"].dt.year == year))
+        idx = np.where((gapminder["year"].dt.year == year))
     else:
         idx = np.where(
-            (gap["year"].dt.year == year) & (gap["region"] == region)
+            (gapminder["year"].dt.year == year)
+            & (gapminder["region"] == region)
         )
 
-    gap_filtered = gap.loc[idx]
+    gap_filtered = gapminder.loc[idx]
 
     scatter_pop_lifeexp = (
         alt.Chart(gap_filtered)
@@ -223,6 +201,70 @@ def plot_lifeexp_gdp(year, region, target_y, target_x):
         .properties(width=250, height=250)
     )
     return scatter_pop_lifeexp.to_html()
+
+
+# Set up callbacks/backend
+@app.callback(
+    Output("world_map", "srcDoc"),
+    Input("target_input_y", "value"),
+    Input("region_input", "value"),
+)
+def plot_map(target, region):
+    """
+    Create map plot for statsitic of interested based on selected filters
+    Parameters
+    --------
+    target_y: string
+        Selection from target of interest filter
+    region: string
+        Selection from the Region filter
+    Returns
+    --------
+    map_chart
+        map chart showing target of interest for specific region
+    Example
+    --------
+    > plot_map("Asia", "life_expectany")
+    """
+    alt.data_transformers.disable_max_rows()
+
+    data = gapminder[(gapminder["region"] == region)]
+
+    # append clean country list
+    if region == "All":
+        data = data.merge(country_list, how="outer", on=["name", "id"])
+
+    # replace NaN values with 0
+    data[[target]] = data[[target]].fillna(-1)
+
+    # create world_map
+    world_map = alt.topo_feature(datasets.world_110m.url, "countries")
+
+    background = alt.Chart(world_map).mark_geoshape(
+        fill="lightgray", stroke="white"
+    )
+
+    map_chart = (
+        alt.Chart(world_map, title=f"{target} by Country for")
+        .mark_geoshape(stroke="black")
+        .transform_lookup(
+            lookup="id",
+            from_=alt.LookupData(data, key="id", fields=["name", target]),
+        )
+        .encode(
+            tooltip=["name:O", target + ":Q"],
+            color=alt.Color(target + ":Q", title=f"{target}"),
+        )
+    )
+
+    final_map = (
+        (background + map_chart)
+        .configure_view(strokeWidth=0)
+        .properties(width=450, height=350)
+        .project("naturalEarth1")
+    )
+
+    return final_map.to_html()
 
 
 if __name__ == "__main__":
