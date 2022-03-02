@@ -214,7 +214,7 @@ def plot_map(target, region):
     Create map plot for statsitic of interested based on selected filters
     Parameters
     --------
-    target_y: string
+    target: string
         Selection from target of interest filter
     region: string
         Selection from the Region filter
