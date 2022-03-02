@@ -4,4 +4,4 @@ plotly
 altair
 dash
 numpy
-dash_bootstrap_components
+dash-bootstrap-components
