@@ -1,4 +1,5 @@
 from pydoc import classname
+from click import style
 import pandas as pd
 import numpy as np
 
@@ -135,6 +136,11 @@ plot_body = [
                 [
                     ### Plot 3
                     html.H2("Life Expectancy during the time chart"),
+                    html.Iframe(
+                        id="line_plot",
+                        className="line-plot",
+                        style={"width":"110%", "height" : "350px"}
+                    ),
                 ],
                 className="col",
             ),
@@ -265,6 +271,62 @@ def plot_map(target, region):
     )
 
     return final_map.to_html()
+
+
+# Set up callbacks/backend
+@app.callback(
+    Output("line_plot", "srcDoc"),
+    Input("target_input_y", "value"),
+    Input("region_input", "value"),
+    Input("country_input", "value"),
+    Input("year_input", "value"),
+)
+def plot_line(target, region, country,  year):
+    """
+    Create line plot for statsitic of interested based on selected filters
+    Parameters
+    --------
+    target: string
+        Selection from target of interest filter
+    region: string
+        Selection from the Region filter
+    year : int
+        Selection from the year dropdown
+    Returns
+    --------
+    line_chart
+        line chart showing target of interest for specific region
+    Example
+    --------
+    > plot_line("life_expectany", "Asia", "Afghanistan", 1970 )
+    """
+
+    pd.options.mode.chained_assignment = None  # default='warn'
+    gm_country = gapminder[gapminder['country'] == country]
+    df = gm_country[["year", target]]
+
+    if(region == "All"):
+        gm_region = gapminder
+    else:
+        gm_region = gapminder[gapminder['sub_region'] == region]
+    df.loc[:,region]=gm_region.groupby(['year']).mean().reset_index()[target]
+
+    df.loc[:,"Whole world"]=gapminder.groupby(['year']).mean().reset_index()[target]
+    df = df.query(f"year <= {year}")
+
+    df.rename(columns={target: country}, inplace=True)
+
+    df = pd.melt(df, id_vars=['year'], value_vars=[country,region,'Whole world'])
+    df = df.astype({"variable": str}, errors='raise') 
+    df["value"] = pd.to_numeric(df["value"])
+
+
+    line_chart= alt.Chart(df).mark_line().encode(
+        x='year',
+        y='value',
+        color = 'variable'
+    ).properties(width=250, height=250)
+    return line_chart.to_html()
 
 
 if __name__ == "__main__":
