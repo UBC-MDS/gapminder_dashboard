@@ -1,0 +1,51 @@
+.app {
+    padding: 10px;
+    background-color: lightgrey;
+    /* height: 100vh; */
+}
+
+.page_layout {
+    display: flex;
+    flex-direction: row;
+    height: 100%
+}
+
+.panel {
+    padding: 15px;
+    padding-bottom: 25px;
+    background-color: #143642;
+    border-radius: 10px;   
+    margin-right: 20px;
+    width: 25vw;
+    color: white
+}
+
+.body {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    color: #0F8B8D
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    width: 70vw;
+    padding: 15px;
+    justify-content: space-between;
+}
+
+.col {
+    padding-right: 15px;
+}
+
+.world-map {
+    height: 400px;
+    width: 650px;
+}
+
+.bubble-plot {
+    height: 340px;
+    width: 500px;
+}

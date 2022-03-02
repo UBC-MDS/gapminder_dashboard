@@ -5,3 +5,4 @@ altair
 dash
 numpy
 dash-bootstrap-components
+vega-datasets
