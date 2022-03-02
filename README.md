@@ -15,11 +15,19 @@ The global map is presented at the bottom of the dashboard with a tooltip for ea
 
 ## Usage and Installation
 
+Install via pip
+
 ```bash
 pip install -r requirements.txt
 ```
 
-To run the application locally:
+Install with Conda environment:
+
+```bash
+conda create --name gapminder --file requirements.txt
+```
+
+To run the application locally run the following command and navigate to [http://127.0.0.1:8050/](http://127.0.0.1:8050/)
 
 ```bash
 python src/app.py
