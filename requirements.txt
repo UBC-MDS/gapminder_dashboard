@@ -3,3 +3,4 @@ gunicorn
 plotly
 altair
 dash
+numpy
