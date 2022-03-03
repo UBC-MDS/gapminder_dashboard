@@ -1,4 +1,5 @@
 from pydoc import classname
+from click import style
 import pandas as pd
 import numpy as np
 
@@ -135,6 +136,11 @@ plot_body = [
                 [
                     ### Plot 3
                     html.H2("Life Expectancy during the time chart"),
+                    html.Iframe(
+                        id="line_plot",
+                        className="line-plot",
+                        style={"width":"110%", "height" : "350px"}
+                    ),
                 ],
                 className="col",
             ),
@@ -265,6 +271,86 @@ def plot_map(target, region):
     )
 
     return final_map.to_html()
+
+
+# Set up callbacks/backend
+@app.callback(
+    Output("line_plot", "srcDoc"),
+    Input("target_input_y", "value"),
+    Input("region_input", "value"),
+    Input("country_input", "value"),
+    Input("year_input", "value"),
+)
+def plot_line(target, region, country,  year):
+    """
+    Create line plot for statsitic of interested based on selected filters
+    Parameters
+    --------
+    target: string
+        Selection from target of interest filter
+    region: string
+        Selection from the Region filter
+    year : int
+        Selection from the year dropdown
+    Returns
+    --------
+    line_chart
+        line chart showing target of interest for specific region
+    Example
+    --------
+    > plot_line("life_expectany", "Asia", "Afghanistan", 1970 )
+    """
+
+    pd.options.mode.chained_assignment = None  # default='warn'
+
+    #creating dataframe that include country, region and whole world of target study
+    gm_country = gapminder[gapminder['country'] == country]
+    df = gm_country[["year", target]]
+
+    if(region != "All"):
+        gm_region = gapminder[gapminder['region'] == region]
+        df.loc[:,region]=gm_region.groupby(['year']).mean().reset_index()[target]
+
+    df.loc[:,"World"]=gapminder.groupby(['year']).mean().reset_index()[target]
+    df = df.query(f"year <= {year}")
+
+    df.rename(columns={target: country}, inplace=True)
+
+    if(region != "All"):
+        df = pd.melt(df, id_vars=['year'], value_vars=[country,region,'World'])
+    else:
+        df = pd.melt(df, id_vars=['year'], value_vars=[country,'World'])
+    df = df.astype({"variable": str}, errors='raise') 
+    df["value"] = pd.to_numeric(df["value"])
+
+    #Dataframe that holds the last value 
+    text_order = (
+        df.loc[df['year'] == df['year'].max()]
+        .sort_values('value', ascending=False))
+    
+    #PLot
+    y_title = list(filter(lambda dic: dic['value'] == target, opt_dropdown_targets))[0]['label']
+
+    line_chart= (
+        alt.Chart(df).mark_line().encode(
+            alt.X('year', title='Date'),
+            alt.Y('value', title=y_title),
+            color = alt.Color('variable', legend=None),
+            tooltip= 'value',
+            ).properties(width=250, height=250
+            )
+    )
+
+    text = alt.Chart(text_order, title= f"{y_title} during the time").mark_text(dx=30).encode(
+        x='year',
+        y='value',
+        text='variable',
+        color='variable')
+    
+    return (line_chart+text
+            ).configure_view(
+                strokeWidth=0
+            ).to_html()
 
 
 if __name__ == "__main__":
