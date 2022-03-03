@@ -175,6 +175,12 @@ app.layout = html.Div(id="main", className="app", children=page_layout)
 
 
 # Set up callback for bar-chart
+@app.callback(
+    Output("top_count_bar_plot", "srcDoc"),
+    Input("target_input_y", "value"),
+    Input("region_input", "value"),
+    Input("year_input", "value")
+)
 def chart_top_countries(target, region, year):
 
     # creating dataframe based on year and region
