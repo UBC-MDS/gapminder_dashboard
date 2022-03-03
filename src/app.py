@@ -302,31 +302,55 @@ def plot_line(target, region, country,  year):
     """
 
     pd.options.mode.chained_assignment = None  # default='warn'
+
+    #creating dataframe that include country, region and whole world of target study
     gm_country = gapminder[gapminder['country'] == country]
     df = gm_country[["year", target]]
 
-    if(region == "All"):
-        gm_region = gapminder
-    else:
-        gm_region = gapminder[gapminder['sub_region'] == region]
-    df.loc[:,region]=gm_region.groupby(['year']).mean().reset_index()[target]
+    if(region != "All"):
+        gm_region = gapminder[gapminder['region'] == region]
+        df.loc[:,region]=gm_region.groupby(['year']).mean().reset_index()[target]
 
-    df.loc[:,"Whole world"]=gapminder.groupby(['year']).mean().reset_index()[target]
+    df.loc[:,"World"]=gapminder.groupby(['year']).mean().reset_index()[target]
     df = df.query(f"year <= {year}")
 
     df.rename(columns={target: country}, inplace=True)
 
-    df = pd.melt(df, id_vars=['year'], value_vars=[country,region,'Whole world'])
+    if(region != "All"):
+        df = pd.melt(df, id_vars=['year'], value_vars=[country,region,'World'])
+    else:
+        df = pd.melt(df, id_vars=['year'], value_vars=[country,'World'])
     df = df.astype({"variable": str}, errors='raise') 
     df["value"] = pd.to_numeric(df["value"])
 
+    #Dataframe that holds the last value 
+    text_order = (
+        df.loc[df['year'] == df['year'].max()]
+        .sort_values('value', ascending=False))
+    
+    #PLot
+    y_title = list(filter(lambda dic: dic['value'] == target, opt_dropdown_targets))[0]['label']
 
-    line_chart= alt.Chart(df).mark_line().encode(
+    line_chart= (
+        alt.Chart(df).mark_line().encode(
+            alt.X('year', title='Date'),
+            alt.Y('value', title=y_title),
+            color = alt.Color('variable', legend=None),
+            tooltip= 'value',
+            ).properties(width=250, height=250
+            )
+    )
+
+    text = alt.Chart(text_order, title= f"{y_title} during the time").mark_text(dx=30).encode(
         x='year',
         y='value',
-        color = 'variable'
-    ).properties(width=250, height=250)
-    return line_chart.to_html()
+        text='variable',
+        color='variable')
+    
+    return (line_chart+text
+            ).configure_view(
+                strokeWidth=0
+            ).to_html()
 
 
 if __name__ == "__main__":
