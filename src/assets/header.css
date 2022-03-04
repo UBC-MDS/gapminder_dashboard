@@ -1,6 +1,6 @@
 .app {
     padding: 10px;
-    background-color: lightgrey;
+    background-color:#808D8E;
     /* height: 100vh; */
 }
 
@@ -11,8 +11,8 @@
 }
 
 .panel {
-    padding: 15px;
-    padding-bottom: 25px;
+    padding: 25px;
+    padding-top: 15px;
     background-color: #143642;
     border-radius: 10px;   
     margin-right: 20px;
@@ -25,27 +25,49 @@
     display: flex;
     flex-direction: column;
     border-radius: 10px;
-    color: #0F8B8D
+    color: #5C0029;
+    padding: 15px;
 }
 
 .row {
     display: flex;
     flex-direction: row;
     width: 70vw;
-    padding: 15px;
     justify-content: space-between;
+    text-align: center;
+    align-items: center;
 }
 
-.col {
-    padding-right: 15px;
-}
 
 .world-map {
-    height: 400px;
-    width: 650px;
+    border-width: 0;
+    height: 500px;
+    width: 750px;
 }
 
 .bubble-plot {
     height: 340px;
     width: 500px;
+    border-width: 0;
+}
+
+.line-plot {
+    border-width: 0;
+    height: 400px;
+    width: 500px;
+}
+
+.bar-plot {
+    border-width: 0;
+    height: 400px;
+    width: 500px
+}
+
+.dropdown {
+    color: black
+}
+
+.radio {
+    display: flex;
+    flex-direction: column;
 }
