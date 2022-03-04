@@ -182,6 +182,27 @@ app.layout = html.Div(id="main", className="app", children=page_layout)
     Input("year_input", "value")
 )
 def chart_top_countries(target, region, year):
+    """
+    Create bar chart for top 10 countries based on the statistic of interest
+
+    Parameters
+    --------
+    target: string
+        Selection from statistic of interest filter
+    region: string
+        Selection from the region button filter
+    year: int
+        Selection from the year dropdown filter
+
+    Returns
+    --------
+    bar_chart
+        bar chart showing top 10 coutries on the target/ statistic of interest
+
+    Example
+    --------
+    > chart_top_countries("life_expectany", "Americas", 2000 )
+    """
 
     # creating dataframe based on year and region
     gm_target = gapminder[gapminder["year"].dt.year == 1950]
@@ -189,10 +210,10 @@ def chart_top_countries(target, region, year):
         gm_target = gm_target[gm_target['region'] == region]
 
     gm_target.sort_values(by=target, axis=0, ascending=False, inplace=True)
-    
+
     # Dataframe that holds the top 10 values
     df = gm_target[:10]
-    
+
     # PLot the bar_chart
     bar_chart = alt.Chart(df).mark_bar(size=22).encode(
         y=alt.Y('country', sort='-x', title='Country'),
@@ -201,9 +222,9 @@ def chart_top_countries(target, region, year):
     ).properties(
         width=170, height=320
     )
-    
+
     return bar_chart.to_html()
-  
+
 
 # Set up callbacks/backend
 @app.callback(
