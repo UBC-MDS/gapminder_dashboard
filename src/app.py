@@ -72,6 +72,7 @@ filter_panel = [
         value="life_expectancy",
         options=opt_dropdown_targets,
         className="dropdown",
+        style={'color': 'black'}
     ),
     html.Br(),
     dcc.Dropdown(
@@ -79,14 +80,7 @@ filter_panel = [
         value="income",
         options=opt_dropdown_targets,
         className="dropdown",
-    ),
-    html.Br(),
-    html.H5("Country", className="text-dark"),
-    dcc.Dropdown(
-        id="country_input",
-        value="Afghanistan",
-        options=opt_dropdown_country,
-        className="dropdown",
+        style={'color': 'black'}
     ),
     html.H5("Region", className="text-dark"),
     dcc.RadioItems(
@@ -96,12 +90,22 @@ filter_panel = [
         className="radio",
     ),
     html.Br(),
+    html.H5("Country", className="text-dark"),
+    dcc.Dropdown(
+        id="country_input",
+        value="Afghanistan",
+        # options=opt_dropdown_country,
+        className="dropdown",
+        style={'color': 'black'}
+    ),
+    html.Br(),
     html.H5("Year", className="text-dark"),
     dcc.Dropdown(
         id="year_input",
         value=1970,
         options=opt_dropdown_years,
         className="dropdown",
+        style={'color': 'black'}
     ),
 ]
 
@@ -172,6 +176,23 @@ page_layout = html.Div(
 
 # Overall layout
 app.layout = html.Div(id="main", className="app", children=page_layout)
+
+
+# Set up callback for bar-chart
+@app.callback(
+    Output("country_input", "options"), 
+    Input("region_input", "value")
+)
+def sync_filters(selected_region):
+    """
+    Sync continents and countries in filter
+    """
+    if(selected_region =='All'):
+        valid_countries = gapminder["country"].unique()
+    else:
+        valid_countries = gapminder.query("region == @selected_region")["country"].unique()
+    country_options = [{"label": col, "value": col} for col in valid_countries]
+    return country_options
 
 
 # Set up callback for bar-chart
@@ -337,52 +358,55 @@ def plot_line(target, region, country,  year):
     > plot_line("life_expectany", "Asia", "Afghanistan", 1970 )
     """
 
-    pd.options.mode.chained_assignment = None  # default='warn'
-
     #creating dataframe that include country, region and whole world of target study
-    gm_country = gapminder[gapminder['country'] == country]
-    df = gm_country[["year", target]]
+    #world
+    df=gapminder.groupby(['year']).mean().reset_index()[['year',target]]
+    df['label']='World'
 
+    #region
     if(region != "All"):
         gm_region = gapminder[gapminder['region'] == region]
-        df.loc[:,region]=gm_region.groupby(['year']).mean().reset_index()[target]
+        df_region = gm_region.groupby(['year']).mean().reset_index()[['year',target]]
+        df_region['label']=region
+        df = pd.concat([df,df_region])
 
-    df.loc[:,"World"]=gapminder.groupby(['year']).mean().reset_index()[target]
-    df = df.query(f"year <= {year}")
-
-    df.rename(columns={target: country}, inplace=True)
-
-    if(region != "All"):
-        df = pd.melt(df, id_vars=['year'], value_vars=[country,region,'World'])
-    else:
-        df = pd.melt(df, id_vars=['year'], value_vars=[country,'World'])
-    df = df.astype({"variable": str}, errors='raise') 
-    df["value"] = pd.to_numeric(df["value"])
+    #country
+    if(len(country) != 0):
+        gm_country = gapminder[gapminder['country'] == country]
+        df_country = gm_country.groupby(['year']).mean().reset_index()[['year',target]]
+        df_country['label']=country
+        df = pd.concat([df,df_country])
+    
+    #Using year 
+    df = df.query('year <= @year')
 
     #Dataframe that holds the last value 
     text_order = (
         df.loc[df['year'] == df['year'].max()]
-        .sort_values('value', ascending=False))
-    
+        .sort_values(target, ascending=False))
+
     #PLot
     y_title = list(filter(lambda dic: dic['value'] == target, opt_dropdown_targets))[0]['label']
 
     line_chart= (
         alt.Chart(df).mark_line().encode(
             alt.X('year', title='Date'),
-            alt.Y('value', title=y_title),
-            color = alt.Color('variable', legend=None),
-            tooltip= 'value',
-            ).properties(width=250, height=250
-            )
+            alt.Y(target, title=y_title),
+            color = alt.Color('label', legend=None),
+            tooltip= ['label',target],
+        ).properties(width=320, height=260
+        )
     )
 
     text = alt.Chart(text_order, title= f"{y_title} during the time").mark_text(dx=30).encode(
         x='year',
-        y='value',
-        text='variable',
-        color='variable')
-    
+        y=target,
+        text='label',
+        color='label',
+        tooltip= ['label',target]
+    )
+
+
     return (line_chart+text
             ).configure_view(
                 strokeWidth=0
