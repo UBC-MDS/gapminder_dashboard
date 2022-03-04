@@ -377,6 +377,9 @@ def plot_line(target, region, country,  year):
         df_country['label']=country
         df = pd.concat([df,df_country])
     
+    #Using year 
+    df = df.query('year <= @year')
+
     #Dataframe that holds the last value 
     text_order = (
         df.loc[df['year'] == df['year'].max()]
@@ -390,16 +393,18 @@ def plot_line(target, region, country,  year):
             alt.X('year', title='Date'),
             alt.Y(target, title=y_title),
             color = alt.Color('label', legend=None),
-            tooltip= target,
-            ).properties(width=320, height=260
-            )
+            tooltip= ['label',target],
+        ).properties(width=320, height=260
+        )
     )
 
     text = alt.Chart(text_order, title= f"{y_title} during the time").mark_text(dx=30).encode(
         x='year',
         y=target,
         text='label',
-        color='label')
+        color='label',
+        tooltip= ['label',target]
+    )
 
 
     return (line_chart+text
