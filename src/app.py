@@ -13,7 +13,7 @@ from vega_datasets import data as datasets
 
 app = dash.Dash(__name__)
 
-# server = app.server
+server = app.server
 
 # Load data
 gapminder = pd.read_csv(
