@@ -122,8 +122,13 @@ plot_body = [
             ),
             dbc.Col(
                 [
-                    ### Plot 2 goes here
+                    ### Plot 2
                     html.H2("Top 10 countries"),
+                    html.Iframe(
+                        id="top_count_bar_plot",
+                        className="bar-plot",
+                        style={"width":"100%", "height" : "400px", "padding-right": "20px"}
+                    ),
                 ],
             ),
         ],
@@ -131,7 +136,6 @@ plot_body = [
     ),
     dbc.Row(
         [
-            ### Second row plots go here
             dbc.Col(
                 [
                     ### Plot 3
@@ -168,6 +172,38 @@ page_layout = html.Div(
 
 # Overall layout
 app.layout = html.Div(id="main", className="app", children=page_layout)
+
+
+# Set up callback for bar-chart
+@app.callback(
+    Output("top_count_bar_plot", "srcDoc"),
+    Input("target_input_y", "value"),
+    Input("region_input", "value"),
+    Input("year_input", "value")
+)
+def chart_top_countries(target, region, year):
+
+    # creating dataframe based on year and region
+    gm_target = gapminder[gapminder["year"].dt.year == 1950]
+    if(region != "All"):
+        gm_target = gm_target[gm_target['region'] == region]
+
+    gm_target.sort_values(by=target, axis=0, ascending=False, inplace=True)
+    
+    # Dataframe that holds the top 10 values
+    df = gm_target[:10]
+    
+    # PLot the bar_chart
+    bar_chart = alt.Chart(df).mark_bar(size=22).encode(
+        y=alt.Y('country', sort='-x', title='Country'),
+        x=alt.X(target, title=target.lower().replace('_', ' ').capitalize()),
+        tooltip=target
+    ).properties(
+        width=170, height=320
+    )
+    
+    return bar_chart.to_html()
+  
 
 # Set up callbacks/backend
 @app.callback(
