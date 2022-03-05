@@ -12,6 +12,11 @@ Additionally we include a bubble chart which visualizes the target study versus 
 
 The global map is presented at the bottom of the dashboard with a tooltip for each country. After choosing a continent in the filter section, the selected continent should be highlighted and the colour gradient will dictate the values of the target of study within that region. To the right of the global map, a bar plot will show the top ten countries with highest value for the selected target of study.
 
+## Useful link 
+- 📊 [Dashboard Link](https://dsci532-2022-gapminder-app.herokuapp.com/)
+- 🗺 [Gapminder website](https://www.gapminder.org/)
+
+
 ## Dashboard Sketch Design
 
 ![sketch of the app](img/app_sketch.png "App Sketch")
