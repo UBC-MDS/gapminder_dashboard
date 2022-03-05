@@ -256,10 +256,26 @@ def chart_top_countries(target, region, year):
     Input("target_input_x", "value"),
 )
 def plot_lifeexp_gdp(year, region, target_y, target_x):
-    # Define plot label depending on target
-    # TBD - Other options to be added
-    if target_y == "life_expectancy":
-        ylabel = "Life Expectancy"
+    """
+    Create map plot for statsitic of interested based on selected filters
+    Parameters
+    --------
+    year : int
+        Selection from the year dropdown
+    region: string
+        Selection from the Region filter
+    target_y: string
+        Selection from target of interest filter for y-axis of the plot
+    target_x: string
+        Selection from target of interest filter for x-axis of the plot
+    Returns
+    --------
+    scatter_pop_lifeexp
+        scatter plot chart showing relation between targets of interest
+    Example
+    --------
+    > plot_lifeexp_gdp("gdp", "life_expectancy")
+    """
 
     # Filter dataframe depending on year and region choice
     # If region == 'All', then only filter on year, else filter on both year and region
