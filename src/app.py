@@ -109,46 +109,48 @@ plot_body = [
         [
             dbc.Col(
                 [
-                    html.H2("Selected Region"),
+                    html.H3("Selected Region"),
                     html.Iframe(
                         id="world_map",
-                        className="world-map",
+                        className="plot",
                     ),
                 ],
-                className="col",
+                className="world-map",
             ),
             dbc.Col(
                 [
-                    html.H2("Top 10 countries in the region"),
+                    html.H3("Top 10 countries in the region"),
                     html.Iframe(
                         id="top_count_bar_plot",
-                        className="bar-plot",
+                        className="plot",
                     ),
                 ],
+                className="bar-plot",
             ),
         ],
-        className="row",
+        className="top-row",
     ),
     dbc.Row(
         [
             dbc.Col(
                 [
-                    html.H2("Target of study over time"),
+                    html.H3("Target of study over time"),
                     html.Iframe(
                         id="line_plot",
-                        className="line-plot",
+                        className="plot",
                     ),
                 ],
-                className="col",
+                className="line-plot",
             ),
             dbc.Col(
                 [
-                    html.H2("Target 1 vs Target 2"),
-                    html.Iframe(id="bubble_plot", className="bubble-plot"),
+                    html.H3("Target 1 vs Target 2"),
+                    html.Iframe(id="bubble_plot", className="plot"),
                 ],
+                className="bubble-plot",
             ),
         ],
-        className="row",
+        className="bottom-row",
     ),
 ]
 
@@ -219,7 +221,7 @@ def chart_top_countries(target, region, year):
             labelFontSize=14,
             titleFontSize=14,
         )
-        .properties(width=200, height=300)
+        .properties(width=200, height=250)
         .configure_view(strokeWidth=0)
     )
 
@@ -274,7 +276,7 @@ def plot_lifeexp_gdp(year, region, target_y, target_x):
             titleFontSize=14,
         )
         .configure_legend(titleFontSize=14)
-        .properties(width=400, height=250)
+        .properties(width=250, height=150)
     )
     return scatter_pop_lifeexp.to_html()
 
@@ -342,7 +344,7 @@ def plot_map(target, region):
     final_map = (
         (background + map_chart)
         .configure_view(strokeWidth=0)
-        .properties(width=900, height=550)
+        .properties(width=600, height=450)
         .configure_legend(titleFontSize=14)
         .project("naturalEarth1")
     )
@@ -423,7 +425,7 @@ def plot_line(target, region, country, year):
             color=alt.Color("label", legend=None),
             tooltip=["label", target],
         )
-        .properties(width=400, height=250)
+        .properties(width=250, height=150)
     )
 
     text = (
