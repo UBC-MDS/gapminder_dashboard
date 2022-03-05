@@ -109,7 +109,7 @@ plot_body = [
         [
             dbc.Col(
                 [
-                    html.H2("World map"),
+                    html.H2("Selected Region"),
                     html.Iframe(
                         id="world_map",
                         className="world-map",
@@ -201,10 +201,6 @@ def chart_top_countries(target, region, year):
 
     gm_target.sort_values(by=target, axis=0, ascending=False, inplace=True)
 
-    alt.renderers.set_embed_options(
-        theme="fivethirtyeight",
-        padding={"left": 0, "right": 0, "bottom": 0, "top": 0},
-    )
     # Dataframe that holds the top 10 values
     df = gm_target[:10]
 
@@ -213,11 +209,15 @@ def chart_top_countries(target, region, year):
         alt.Chart(df)
         .mark_bar(size=22)
         .encode(
-            y=alt.Y("country", sort="-x", title="Country"),
+            y=alt.Y("country", sort="-x", title=""),
             x=alt.X(
                 target, title=target.lower().replace("_", " ").capitalize()
             ),
             tooltip=target,
+        )
+        .configure_axis(
+            labelFontSize=14,
+            titleFontSize=14,
         )
         .properties(width=200, height=300)
         .configure_view(strokeWidth=0)
@@ -252,16 +252,29 @@ def plot_lifeexp_gdp(year, region, target_y, target_x):
 
     gap_filtered = gapminder.loc[idx]
 
+    y_title = list(
+        filter(lambda dic: dic["value"] == target_y, opt_dropdown_targets)
+    )[0]["label"]
+
+    x_title = list(
+        filter(lambda dic: dic["value"] == target_x, opt_dropdown_targets)
+    )[0]["label"]
+
     scatter_pop_lifeexp = (
         alt.Chart(gap_filtered)
         .mark_circle()
         .encode(
-            x=alt.X(target_x, title=target_x),
-            y=alt.Y(target_y, title=target_y),
+            x=alt.X(target_x, title=x_title),
+            y=alt.Y(target_y, title=y_title),
             color="region",
             size="population",
         )
-        .properties(width=250, height=300)
+        .configure_axis(
+            labelFontSize=14,
+            titleFontSize=14,
+        )
+        .configure_legend(titleFontSize=14)
+        .properties(width=400, height=250)
     )
     return scatter_pop_lifeexp.to_html()
 
@@ -309,6 +322,10 @@ def plot_map(target, region):
         fill="lightgray", stroke="white"
     )
 
+    title = list(
+        filter(lambda dic: dic["value"] == target, opt_dropdown_targets)
+    )[0]["label"]
+
     map_chart = (
         alt.Chart(world_map)
         .mark_geoshape(stroke="black")
@@ -318,14 +335,15 @@ def plot_map(target, region):
         )
         .encode(
             tooltip=["name:O", target + ":Q"],
-            color=alt.Color(target + ":Q", title=f"{target}"),
+            color=alt.Color(target + ":Q", title=f"{title}"),
         )
     )
 
     final_map = (
         (background + map_chart)
         .configure_view(strokeWidth=0)
-        .properties(width=550, height=450)
+        .properties(width=900, height=550)
+        .configure_legend(titleFontSize=14)
         .project("naturalEarth1")
     )
 
@@ -405,7 +423,7 @@ def plot_line(target, region, country, year):
             color=alt.Color("label", legend=None),
             tooltip=["label", target],
         )
-        .properties(width=320, height=260)
+        .properties(width=400, height=250)
     )
 
     text = (
@@ -420,7 +438,16 @@ def plot_line(target, region, country, year):
         )
     )
 
-    return (line_chart + text).configure_view(strokeWidth=0).to_html()
+    return (
+        (line_chart + text)
+        .configure_view(strokeWidth=0)
+        .configure_axis(
+            labelFontSize=14,
+            titleFontSize=14,
+        )
+        .configure_legend(titleFontSize=14)
+        .to_html()
+    )
 
 
 if __name__ == "__main__":

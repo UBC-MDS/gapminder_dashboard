@@ -32,33 +32,35 @@
 .row {
     display: flex;
     flex-direction: row;
-    width: 70vw;
-    justify-content: space-between;
+    width: 75vw;
+    justify-content: space-around;
     text-align: center;
 }
 
 
 .world-map {
     border-width: 0;
-    height: 500px;
-    width: 750px;
+    height: 600px;
+    width: 800px;
 }
 
 .bubble-plot {
     height: 340px;
-    width: 500px;
+    width: 650px;
     border-width: 0;
 }
 
 .line-plot {
     border-width: 0;
     height: 400px;
-    width: 500px;
+    width: 600px;
 }
 
 .bar-plot {
+    padding-top: 80px;
+    padding-left: 80px;
     border-width: 0;
-    height: 400px;
+    height: 500px;
     width: 500px
 }
 
