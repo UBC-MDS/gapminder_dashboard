@@ -1,6 +1,6 @@
 .app {
     padding: 10px;
-    background-color: lightgrey;
+    background-color:#808D8E;
     /* height: 100vh; */
 }
 
@@ -11,12 +11,12 @@
 }
 
 .panel {
-    padding: 15px;
-    padding-bottom: 25px;
+    padding: 25px;
+    padding-top: 15px;
     background-color: #143642;
     border-radius: 10px;   
     margin-right: 20px;
-    width: 25vw;
+    width: 30vw;
     color: white
 }
 
@@ -25,27 +25,63 @@
     display: flex;
     flex-direction: column;
     border-radius: 10px;
-    color: #0F8B8D
+    color: #5C0029;
+    padding: 15px;
 }
 
-.row {
+.top-row {
     display: flex;
     flex-direction: row;
     width: 70vw;
-    padding: 15px;
+    height: 60%;
     justify-content: space-between;
+    text-align: center;
 }
 
-.col {
-    padding-right: 15px;
+.bottom-row {
+    display: flex;
+    flex-direction: row;
+    width: 70vw;
+    height: 30%;
+    justify-content: space-around;
+    text-align: center;
 }
 
 .world-map {
-    height: 400px;
-    width: 650px;
+    width: 60%;
+    height: 80%;
 }
 
+.bar-plot {
+    width: 40%;
+    height: 100%
+}
+
+
 .bubble-plot {
-    height: 340px;
-    width: 500px;
+    height: 100%;
+    width: 50%;
+}
+
+.line-plot {
+    border-width: 0;
+    height: 100%;
+    width: 50%;
+}
+
+.plot {
+    border-width: 0;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+}
+
+
+.dropdown {
+    color: black
+}
+
+.radio {
+    display: flex;
+    flex-direction: column;
 }

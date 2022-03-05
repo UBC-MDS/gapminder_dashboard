@@ -65,14 +65,13 @@ filter_panel = [
     html.Br(),
     html.Br(),
     #### Add LHS selection filters here
-    html.H3("Filters", className="text-primary"),
-    html.H5("Target of Study", className="text-dark"),
+    html.H3("Filters"),
+    html.H5("Target of Study"),
     dcc.Dropdown(
         id="target_input_y",
         value="life_expectancy",
         options=opt_dropdown_targets,
         className="dropdown",
-        style={'color': 'black'}
     ),
     html.Br(),
     dcc.Dropdown(
@@ -80,9 +79,8 @@ filter_panel = [
         value="income",
         options=opt_dropdown_targets,
         className="dropdown",
-        style={'color': 'black'}
     ),
-    html.H5("Region", className="text-dark"),
+    html.H5("Region"),
     dcc.RadioItems(
         id="region_input",
         value="All",
@@ -90,77 +88,69 @@ filter_panel = [
         className="radio",
     ),
     html.Br(),
-    html.H5("Country", className="text-dark"),
+    html.H5("Country"),
     dcc.Dropdown(
         id="country_input",
         value="Afghanistan",
-        # options=opt_dropdown_country,
         className="dropdown",
-        style={'color': 'black'}
     ),
     html.Br(),
-    html.H5("Year", className="text-dark"),
+    html.H5("Year"),
     dcc.Dropdown(
         id="year_input",
         value=1970,
         options=opt_dropdown_years,
         className="dropdown",
-        style={'color': 'black'}
     ),
 ]
 
 plot_body = [
     dbc.Row(
         [
-            ### Top row images go here
             dbc.Col(
                 [
-                    ### Plot 1
-                    html.H2("Life Expectancy world map"),
+                    html.H3("Selected Region"),
                     html.Iframe(
                         id="world_map",
-                        className="world-map",
+                        className="plot",
                     ),
                 ],
-                className="col",
+                className="world-map",
             ),
             dbc.Col(
                 [
-                    ### Plot 2
-                    html.H2("Top 10 countries"),
+                    html.H3("Top 10 countries in the region"),
                     html.Iframe(
                         id="top_count_bar_plot",
-                        className="bar-plot",
-                        style={"width":"100%", "height" : "400px", "padding-right": "20px"}
+                        className="plot",
                     ),
                 ],
+                className="bar-plot",
             ),
         ],
-        className="row",
+        className="top-row",
     ),
     dbc.Row(
         [
             dbc.Col(
                 [
-                    ### Plot 3
-                    html.H2("Life Expectancy during the time chart"),
+                    html.H3("Target of study over time"),
                     html.Iframe(
                         id="line_plot",
-                        className="line-plot",
-                        style={"width":"110%", "height" : "350px"}
+                        className="plot",
                     ),
                 ],
-                className="col",
+                className="line-plot",
             ),
             dbc.Col(
                 [
-                    ### Plot 4 goes here
-                    html.H2("Life expectancy vs GDP Plot"),
-                    html.Iframe(id="bubble_plot", className="bubble-plot"),
+                    html.H3("Target 1 vs Target 2"),
+                    html.Iframe(id="bubble_plot", className="plot"),
                 ],
+                className="bubble-plot",
             ),
         ],
-        className="row",
+        className="bottom-row",
     ),
 ]
 
@@ -180,17 +170,18 @@ app.layout = html.Div(id="main", className="app", children=page_layout)
 
 # Set up callback for bar-chart
 @app.callback(
-    Output("country_input", "options"), 
-    Input("region_input", "value")
+    Output("country_input", "options"), Input("region_input", "value")
 )
 def sync_filters(selected_region):
     """
     Sync continents and countries in filter
     """
-    if(selected_region =='All'):
+    if selected_region == "All":
         valid_countries = gapminder["country"].unique()
     else:
-        valid_countries = gapminder.query("region == @selected_region")["country"].unique()
+        valid_countries = gapminder.query("region == @selected_region")[
+            "country"
+        ].unique()
     country_options = [{"label": col, "value": col} for col in valid_countries]
     return country_options
 
@@ -200,7 +191,7 @@ def sync_filters(selected_region):
     Output("top_count_bar_plot", "srcDoc"),
     Input("target_input_y", "value"),
     Input("region_input", "value"),
-    Input("year_input", "value")
+    Input("year_input", "value"),
 )
 def chart_top_countries(target, region, year):
     """
@@ -224,11 +215,12 @@ def chart_top_countries(target, region, year):
     --------
     > chart_top_countries("life_expectany", "Americas", 2000 )
     """
+    alt.themes.enable("none")
 
     # creating dataframe based on year and region
     gm_target = gapminder[gapminder["year"].dt.year == 1950]
-    if(region != "All"):
-        gm_target = gm_target[gm_target['region'] == region]
+    if region != "All":
+        gm_target = gm_target[gm_target["region"] == region]
 
     gm_target.sort_values(by=target, axis=0, ascending=False, inplace=True)
 
@@ -236,12 +228,22 @@ def chart_top_countries(target, region, year):
     df = gm_target[:10]
 
     # PLot the bar_chart
-    bar_chart = alt.Chart(df).mark_bar(size=22).encode(
-        y=alt.Y('country', sort='-x', title='Country'),
-        x=alt.X(target, title=target.lower().replace('_', ' ').capitalize()),
-        tooltip=target
-    ).properties(
-        width=170, height=320
+    bar_chart = (
+        alt.Chart(df)
+        .mark_bar(size=22)
+        .encode(
+            y=alt.Y("country", sort="-x", title=""),
+            x=alt.X(
+                target, title=target.lower().replace("_", " ").capitalize()
+            ),
+            tooltip=target,
+        )
+        .configure_axis(
+            labelFontSize=14,
+            titleFontSize=14,
+        )
+        .properties(width=200, height=250)
+        .configure_view(strokeWidth=0)
     )
 
     return bar_chart.to_html()
@@ -273,16 +275,29 @@ def plot_lifeexp_gdp(year, region, target_y, target_x):
 
     gap_filtered = gapminder.loc[idx]
 
+    y_title = list(
+        filter(lambda dic: dic["value"] == target_y, opt_dropdown_targets)
+    )[0]["label"]
+
+    x_title = list(
+        filter(lambda dic: dic["value"] == target_x, opt_dropdown_targets)
+    )[0]["label"]
+
     scatter_pop_lifeexp = (
         alt.Chart(gap_filtered)
         .mark_circle()
         .encode(
-            x=alt.X(target_x, title=target_x),
-            y=alt.Y(target_y, title=target_y),
+            x=alt.X(target_x, title=x_title),
+            y=alt.Y(target_y, title=y_title),
             color="region",
             size="population",
         )
-        .properties(width=250, height=250)
+        .configure_axis(
+            labelFontSize=14,
+            titleFontSize=14,
+        )
+        .configure_legend(titleFontSize=14)
+        .properties(width=250, height=150)
     )
     return scatter_pop_lifeexp.to_html()
 
@@ -295,13 +310,13 @@ def plot_lifeexp_gdp(year, region, target_y, target_x):
 )
 def plot_map(target, region):
     """
-    Create map plot for statsitic of interested based on selected filters
+    Create map plot for target of interest based on the selected filters
     Parameters
     --------
     target: string
         Selection from target of interest filter
     region: string
-        Selection from the Region filter
+        Selection from the region filter
     Returns
     --------
     map_chart
@@ -311,6 +326,8 @@ def plot_map(target, region):
     > plot_map("Asia", "life_expectany")
     """
     alt.data_transformers.disable_max_rows()
+
+    alt.themes.enable("none")
 
     data = gapminder[(gapminder["region"] == region)]
 
@@ -328,8 +345,12 @@ def plot_map(target, region):
         fill="lightgray", stroke="white"
     )
 
+    title = list(
+        filter(lambda dic: dic["value"] == target, opt_dropdown_targets)
+    )[0]["label"]
+
     map_chart = (
-        alt.Chart(world_map, title=f"{target} by Country for")
+        alt.Chart(world_map)
         .mark_geoshape(stroke="black")
         .transform_lookup(
             lookup="id",
@@ -337,14 +358,15 @@ def plot_map(target, region):
         )
         .encode(
             tooltip=["name:O", target + ":Q"],
-            color=alt.Color(target + ":Q", title=f"{target}"),
+            color=alt.Color(target + ":Q", title=f"{title}"),
         )
     )
 
     final_map = (
         (background + map_chart)
         .configure_view(strokeWidth=0)
-        .properties(width=450, height=350)
+        .properties(width=600, height=450)
+        .configure_legend(titleFontSize=14)
         .project("naturalEarth1")
     )
 
@@ -359,7 +381,7 @@ def plot_map(target, region):
     Input("country_input", "value"),
     Input("year_input", "value"),
 )
-def plot_line(target, region, country,  year):
+def plot_line(target, region, country, year):
     """
     Create line plot for statsitic of interested based on selected filters
     Parameters
@@ -379,59 +401,76 @@ def plot_line(target, region, country,  year):
     > plot_line("life_expectany", "Asia", "Afghanistan", 1970 )
     """
 
-    #creating dataframe that include country, region and whole world of target study
-    #world
-    df=gapminder.groupby(['year']).mean().reset_index()[['year',target]]
-    df['label']='World'
+    # creating dataframe that include country, region and whole world of target study
+    # world
+    df = gapminder.groupby(["year"]).mean().reset_index()[["year", target]]
+    df["label"] = "World"
 
-    #region
-    if(region != "All"):
-        gm_region = gapminder[gapminder['region'] == region]
-        df_region = gm_region.groupby(['year']).mean().reset_index()[['year',target]]
-        df_region['label']=region
-        df = pd.concat([df,df_region])
+    # region
+    if region != "All":
+        gm_region = gapminder[gapminder["region"] == region]
+        df_region = (
+            gm_region.groupby(["year"]).mean().reset_index()[["year", target]]
+        )
+        df_region["label"] = region
+        df = pd.concat([df, df_region])
 
-    #country
-    if(len(country) != 0):
-        gm_country = gapminder[gapminder['country'] == country]
-        df_country = gm_country.groupby(['year']).mean().reset_index()[['year',target]]
-        df_country['label']=country
-        df = pd.concat([df,df_country])
-    
-    #Using year 
-    df = df.query('year <= @year')
+    # country
+    if len(country) != 0:
+        gm_country = gapminder[gapminder["country"] == country]
+        df_country = (
+            gm_country.groupby(["year"]).mean().reset_index()[["year", target]]
+        )
+        df_country["label"] = country
+        df = pd.concat([df, df_country])
 
-    #Dataframe that holds the last value 
-    text_order = (
-        df.loc[df['year'] == df['year'].max()]
-        .sort_values(target, ascending=False))
+    # Using year
+    df = df.query("year <= @year")
 
-    #PLot
-    y_title = list(filter(lambda dic: dic['value'] == target, opt_dropdown_targets))[0]['label']
+    # Dataframe that holds the last value
+    text_order = df.loc[df["year"] == df["year"].max()].sort_values(
+        target, ascending=False
+    )
 
-    line_chart= (
-        alt.Chart(df).mark_line().encode(
-            alt.X('year', title='Date'),
+    # PLot
+    y_title = list(
+        filter(lambda dic: dic["value"] == target, opt_dropdown_targets)
+    )[0]["label"]
+
+    line_chart = (
+        alt.Chart(df)
+        .mark_line()
+        .encode(
+            alt.X("year", title="Date"),
             alt.Y(target, title=y_title),
-            color = alt.Color('label', legend=None),
-            tooltip= ['label',target],
-        ).properties(width=320, height=260
+            color=alt.Color("label", legend=None),
+            tooltip=["label", target],
+        )
+        .properties(width=250, height=150)
+    )
+
+    text = (
+        alt.Chart(text_order)
+        .mark_text(dx=30)
+        .encode(
+            x="year",
+            y=target,
+            text="label",
+            color="label",
+            tooltip=["label", target],
         )
     )
 
-    text = alt.Chart(text_order, title= f"{y_title} during the time").mark_text(dx=30).encode(
-        x='year',
-        y=target,
-        text='label',
-        color='label',
-        tooltip= ['label',target]
+    return (
+        (line_chart + text)
+        .configure_view(strokeWidth=0)
+        .configure_axis(
+            labelFontSize=14,
+            titleFontSize=14,
+        )
+        .configure_legend(titleFontSize=14)
+        .to_html()
     )
-
-
-    return (line_chart+text
-            ).configure_view(
-                strokeWidth=0
-            ).to_html()
 
 
 if __name__ == "__main__":
