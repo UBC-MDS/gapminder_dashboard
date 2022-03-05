@@ -194,6 +194,27 @@ def sync_filters(selected_region):
     Input("year_input", "value"),
 )
 def chart_top_countries(target, region, year):
+    """
+    Create bar chart for top 10 countries based on the statistic of interest
+
+    Parameters
+    --------
+    target: string
+        Selection from statistic of interest filter
+    region: string
+        Selection from the region button filter
+    year: int
+        Selection from the year dropdown filter
+
+    Returns
+    --------
+    bar_chart
+        bar chart showing top 10 coutries on the target/ statistic of interest
+
+    Example
+    --------
+    > chart_top_countries("life_expectany", "Americas", 2000 )
+    """
     alt.themes.enable("none")
 
     # creating dataframe based on year and region
