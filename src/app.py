@@ -109,7 +109,7 @@ plot_body = [
         [
             dbc.Col(
                 [
-                    html.H2("Life Expectancy world map"),
+                    html.H2("World map"),
                     html.Iframe(
                         id="world_map",
                         className="world-map",
@@ -119,7 +119,7 @@ plot_body = [
             ),
             dbc.Col(
                 [
-                    html.H2("Top 10 countries"),
+                    html.H2("Top 10 countries in the region"),
                     html.Iframe(
                         id="top_count_bar_plot",
                         className="bar-plot",
@@ -133,7 +133,7 @@ plot_body = [
         [
             dbc.Col(
                 [
-                    html.H2("Life Expectancy during the time chart"),
+                    html.H2("Target of study over time"),
                     html.Iframe(
                         id="line_plot",
                         className="line-plot",
@@ -143,7 +143,7 @@ plot_body = [
             ),
             dbc.Col(
                 [
-                    html.H2("Life expectancy vs GDP Plot"),
+                    html.H2("Target 1 vs Target 2"),
                     html.Iframe(id="bubble_plot", className="bubble-plot"),
                 ],
             ),
@@ -310,7 +310,7 @@ def plot_map(target, region):
     )
 
     map_chart = (
-        alt.Chart(world_map, title=f"{target} by Country for")
+        alt.Chart(world_map)
         .mark_geoshape(stroke="black")
         .transform_lookup(
             lookup="id",
@@ -409,7 +409,7 @@ def plot_line(target, region, country, year):
     )
 
     text = (
-        alt.Chart(text_order, title=f"{y_title} during the time")
+        alt.Chart(text_order)
         .mark_text(dx=30)
         .encode(
             x="year",
