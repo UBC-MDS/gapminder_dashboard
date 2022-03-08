@@ -1,6 +1,6 @@
 # This Dockerfile is from https://github.com/thedirtyfew/dash-docker-mwe
 
-FROM python:3.8-slim-buster
+FROM python:3.10-slim-buster
 
 # Create a working directory.
 RUN mkdir wd
@@ -14,4 +14,4 @@ RUN pip3 install -r requirements.txt
 COPY . ./
 
 # Finally, run gunicorn.
-CMD [ "gunicorn", "--workers=5", "--threads=1", "-b 0.0.0.0:8000", "app:server"]
+CMD [ "gunicorn", "--workers=5", "--threads=1", "-b 0.0.0.0:8050", "src.app:server"]

@@ -2,7 +2,6 @@
 
 ![app_usage](https://user-images.githubusercontent.com/88474134/156894591-9d7a9b26-01a1-4a10-b6b5-a4979539040f.gif)
 
-
 ## Decription of the app
 
 The Gapminder dataset is a great source of information to learn about the world. The main objective of this app is to investigate what the young population of students know and don’t know about basic global patterns and macro-trends and educate the intended users on global development trends. This dashboard has been developed to communicate insights about historical social/economic trends and create a better understanding of using and teaching statistics.
@@ -12,10 +11,10 @@ Additionally we include a bubble chart which visualizes the target study versus 
 
 The global map is presented at the bottom of the dashboard with a tooltip for each country. After choosing a continent in the filter section, the selected continent should be highlighted and the colour gradient will dictate the values of the target of study within that region. To the right of the global map, a bar plot will show the top ten countries with highest value for the selected target of study.
 
-## Useful link 
+## Useful link
+
 - 📊 [Dashboard Link](https://dsci532-2022-gapminder-app.herokuapp.com/)
 - 🗺 [Gapminder website](https://www.gapminder.org/)
-
 
 ## Dashboard Sketch Design
 
@@ -23,24 +22,41 @@ The global map is presented at the bottom of the dashboard with a tooltip for ea
 
 ## Usage and Installation
 
-Install via pip
+### Clone the repo
+
+```
+git clone https://github.com/UBC-MDS/gapminder_dashboard.git
+```
+
+Navigate to the folder and install via the method of preference:
+
+### Install via pip
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Install with Conda environment:
+### Install with Conda environment
 
 ```bash
 conda create --name gapminder --file requirements.txt
 ```
 
-To run the application locally run the following command and navigate to [http://127.0.0.1:8050/](http://127.0.0.1:8050/)
+Then run the following command:
 
 ```bash
 python src/app.py
 ```
-## Contributing 
+
+### Install with [Docker](https://www.docker.com/)
+
+```
+docker-compose up
+```
+
+Navigate to [http://127.0.0.1:8050/](http://127.0.0.1:8050/) in your chosen browser.
+
+## Contributing
 
 Interested in contributing? Check out the contributing guidelines. Please note that this project is released with a Code of Conduct. By contributing to this project, you agree to abide by its terms.
 

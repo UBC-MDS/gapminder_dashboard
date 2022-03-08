@@ -1,0 +1,9 @@
+# docker-compose.yml
+version: '3'
+services:
+  # main application
+  myapp:
+    container_name: myapp
+    build: .
+    ports:
+      - "8050:8050"
