@@ -3,7 +3,7 @@ version: '3'
 services:
   # main application
   myapp:
-    container_name: myapp
+    container_name: gapminder
     build: .
     ports:
       - "8050:8050"
