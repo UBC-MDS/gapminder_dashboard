@@ -12,6 +12,7 @@ import altair as alt
 from vega_datasets import data as datasets
 
 app = dash.Dash(__name__)
+app.title = "Gapminder Dashboard"
 
 server = app.server
 
