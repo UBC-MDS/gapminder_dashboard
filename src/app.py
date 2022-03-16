@@ -97,11 +97,18 @@ filter_panel = [
     ),
     html.Br(),
     html.H5("Year"),
-    dcc.Dropdown(
+    dcc.Slider(
         id="year_input",
+        min=1950,
+        max=2018,
+        step=1,
         value=1970,
-        options=opt_dropdown_years,
-        className="dropdown",
+        marks={
+            1950: '1950',
+            2018: '2018'
+        },
+        included=False,
+        tooltip={"placement": "bottom", "always_visible": True}
     ),
 ]
 
