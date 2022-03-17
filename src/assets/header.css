@@ -36,6 +36,10 @@
     height: 60%;
     justify-content: space-between;
     text-align: center;
+    border: 2px solid;
+    border-color: #143642;
+    margin-bottom: 10px;
+    border-radius: 10px;
 }
 
 .bottom-row {
@@ -45,11 +49,15 @@
     height: 40%;
     justify-content: space-around;
     text-align: center;
+    border: 2px solid;
+    border-color: #143642;
+    margin-bottom: 10px;
+    border-radius: 10px;
 }
 
 .world-map {
     width: 60%;
-    height: 80%;
+    height: 90%;
 }
 
 .bar-plot {

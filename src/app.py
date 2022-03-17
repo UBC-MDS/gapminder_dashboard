@@ -33,23 +33,19 @@ opt_dropdown_years = [
     for year in np.unique(gapminder["year"].dt.year)
 ]
 # Selection filter options - Region
-opt_radio_regions = [{"label": "All", "value": "All"}] + [
+opt_radio_regions = [
     {"label": region, "value": region}
     for region in np.unique(gapminder["region"])
-]
+] + [{"label": "All", "value": "All"}]
 
 # Selection filter options - Target of the study
 opt_dropdown_targets = [
     {"label": "Population", "value": "population"},
-    {"label": "Income Group", "value": "income_group"},
     {"label": "GDP", "value": "income"},
     {"label": "Life Expectancy", "value": "life_expectancy"},
     {"label": "Children per woman", "value": "children_per_woman"},
     {"label": "Child Mortality", "value": "child_mortality"},
     {"label": "Population density", "value": "pop_density"},
-    {"label": "CO2 per capita", "value": "co2_per_capita"},
-    {"label": "Avg years in school (men)", "value": "years_in_school_men"},
-    {"label": "Avg years in school (men)", "value": "years_in_school_women"},
 ]
 
 # Selection filter country
@@ -84,7 +80,7 @@ filter_panel = [
     html.H5("Region"),
     dcc.RadioItems(
         id="region_input",
-        value="All",
+        value="Africa",
         options=opt_radio_regions,
         className="radio",
     ),

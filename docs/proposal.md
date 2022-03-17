@@ -10,7 +10,7 @@ The objective is to investigate what the young population of students know and d
 
 This dashboard is designed to be an educational tool. Hence we are targeting the below audience.
 
-- **Students** 
+- **Students**
   Gapminder provides reliable statistics for nearly every aspect of global development, such as population growth, life expectancy, standard of living, etc. Students can interact with this rich data using this dashboard to get a better picture of the progress made on global development over time. These interactions should empower the students and help change their perceptions of the global world. Also, students will realize the importance of using statistics to investigate issues like global development and can utilize the skills learned in this endeavour in other aspects of their academic lives.
 
 - **Educators**
@@ -22,22 +22,18 @@ This dashboard intends to educate with a fact-based worldview that everyone can 
 
 ## Description of the data
 
-The gapminder dataset is collected and maintained by \href{https://www.gapminder.org/}{Gapminder.org}, a non-for-profit organization trying to eliminate social misconceptions from our societies. For this project, we have focused on a subset of nine (9) social parameters which we wanted to analyse. Data on these selected parameters is available from the year 1800 to 2018, and is collected at country level. Overall, there are 38982 observations. The description of columns in dataset is given below:
+The gapminder dataset is collected and maintained by \href{<https://www.gapminder.org/}{Gapminder.org>}, a non-for-profit organization trying to eliminate social misconceptions from our societies. For this project, we have focused on a subset of nine (9) social parameters which we wanted to analyse. Data on these selected parameters is available from the year 1800 to 2018, and is collected at country level. Overall, there are 38982 observations. The description of columns in dataset is given below:
 
 - `year`: Year of observation
 - `country`: Country name
-- `region`: Continent the country belongs to 
-- `sub_region`: Sub regions as defined 
+- `region`: Continent the country belongs to
+- `sub_region`: Sub regions as defined
 - `population`: Population in the country at each year
-- `income_group`: Income group as specified by the world bank
 - `income`: GDP per capita (in USD) adjusted for purchasing power
 - `life_expectancy`: Average years a newborn child would live if mortality patterns stay the same
 - `children_per_woman`: Number of children born to each woman
 - `child_mortality`: Deaths of children under 5 years of age per 1000 live births
 - `pop_density`: Average number of people per km2
-- `co2_per_capita`: CO2 emissions from fossil fuels (tonnes per capita)
-- `years_in_school_men`: Average years attending primary, secondary, and tertiary school for 25-36 years old men
-- `years_in_school_women`: Average years attending primary, secondary, and tertiary school for 25-36 years old women
 
 ## Usage Scenario
 
