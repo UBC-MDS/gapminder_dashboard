@@ -103,12 +103,9 @@ filter_panel = [
         max=2018,
         step=1,
         value=1970,
-        marks={
-            1950: '1950',
-            2018: '2018'
-        },
+        marks={1950: "1950", 2018: "2018"},
         included=False,
-        tooltip={"placement": "bottom", "always_visible": True}
+        tooltip={"placement": "bottom", "always_visible": True},
     ),
 ]
 
@@ -117,7 +114,6 @@ plot_body = [
         [
             dbc.Col(
                 [
-                    html.H3("Selected Region"),
                     html.Iframe(
                         id="world_map",
                         className="plot",
@@ -127,7 +123,7 @@ plot_body = [
             ),
             dbc.Col(
                 [
-                    html.H3("Top 10 countries in the region"),
+                    # html.H3("Top 10 countries in the region"),
                     html.Iframe(
                         id="top_count_bar_plot",
                         className="plot",
@@ -142,7 +138,7 @@ plot_body = [
         [
             dbc.Col(
                 [
-                    html.H3("Target of study over time"),
+                    # html.H3("Target of study over time"),
                     html.Iframe(
                         id="line_plot",
                         className="plot",
@@ -152,7 +148,7 @@ plot_body = [
             ),
             dbc.Col(
                 [
-                    html.H3("Target 1 vs Target 2"),
+                    # html.H3("Target 1 vs Target 2"),
                     html.Iframe(id="bubble_plot", className="plot"),
                 ],
                 className="bubble-plot",
@@ -235,9 +231,20 @@ def chart_top_countries(target, region, year):
     # Dataframe that holds the top 10 values
     df = gm_target[:10]
 
+    title = (
+        "Top 10 countries in the world"
+        if region == "All"
+        else "Top 10 countries in the Americas"
+        if region == "Americas"
+        else "Top 10 countries in " + region
+    )
     # PLot the bar_chart
     bar_chart = (
-        alt.Chart(df)
+        alt.Chart(
+            df,
+            title=title,
+            padding={"left": 20, "right": 0},
+        )
         .mark_bar(size=22)
         .encode(
             y=alt.Y("country", sort="-x", title=""),
@@ -246,12 +253,10 @@ def chart_top_countries(target, region, year):
             ),
             tooltip=target,
         )
-        .configure_axis(
-            labelFontSize=14,
-            titleFontSize=14,
-        )
+        .configure_axis(labelFontSize=14, titleFontSize=14)
         .properties(width=200, height=250)
         .configure_view(strokeWidth=0)
+        .configure_title(fontSize=20, anchor="start", color="#5C0029")
     )
 
     return bar_chart.to_html()
@@ -308,19 +313,21 @@ def plot_lifeexp_gdp(year, region, target_y, target_x):
     )[0]["label"]
 
     scatter_pop_lifeexp = (
-        alt.Chart(gap_filtered)
+        alt.Chart(
+            gap_filtered,
+            title=f"{y_title} vs. {x_title}",
+            padding={"left": 20, "right": 0, "top": 0},
+        )
         .mark_circle()
         .encode(
             x=alt.X(target_x, title=x_title),
             y=alt.Y(target_y, title=y_title),
-            color="region",
-            size="population",
+            color=alt.Color("region", title="Region"),
+            size=alt.Size("population", title="Population"),
         )
-        .configure_axis(
-            labelFontSize=14,
-            titleFontSize=14,
-        )
-        .configure_legend(titleFontSize=14)
+        .configure_axis(labelFontSize=14, titleFontSize=14)
+        .configure_legend(titleFontSize=14, titleColor="#5C0029")
+        .configure_title(fontSize=20, anchor="start", color="#5C0029")
         .properties(width=250, height=150)
     )
     return scatter_pop_lifeexp.to_html()
@@ -369,12 +376,23 @@ def plot_map(target, region):
         fill="lightgray", stroke="white"
     )
 
-    title = list(
+    target_title = list(
         filter(lambda dic: dic["value"] == target, opt_dropdown_targets)
     )[0]["label"]
 
+    region_title = "the Americas" if region == "Americas" else region
+
+    title = (
+        "Global " + target_title
+        if region == "All"
+        else target_title + " in " + region_title
+    )
+
     map_chart = (
-        alt.Chart(world_map)
+        alt.Chart(
+            world_map,
+            title=f"{title}",
+        )
         .mark_geoshape(stroke="black")
         .transform_lookup(
             lookup="id",
@@ -382,14 +400,26 @@ def plot_map(target, region):
         )
         .encode(
             tooltip=["name:O", target + ":Q"],
-            color=alt.Color(target + ":Q", title=f"{title}"),
+            color=alt.Color(
+                target + ":Q",
+                title=f"{target_title}",
+                legend=alt.Legend(
+                    orient="none",
+                    legendX=440,
+                    legendY=20,
+                    direction="horizontal",
+                    titleAnchor="end",
+                    titleColor="#5C0029",
+                ),
+            ),
         )
     )
 
     final_map = (
         (background + map_chart)
         .configure_view(strokeWidth=0)
-        .properties(width=600, height=450)
+        .properties(width=600, height=450, padding={"left": 20, "right": 0})
+        .configure_title(fontSize=20, anchor="start", color="#5C0029")
         .configure_legend(titleFontSize=14)
         .project("naturalEarth1")
     )
@@ -462,7 +492,7 @@ def plot_line(target, region, country, year):
     )[0]["label"]
 
     line_chart = (
-        alt.Chart(df)
+        alt.Chart(df, title=f"{y_title} from 1950 to {year}")
         .mark_line()
         .encode(
             alt.X("year", title="Date"),
@@ -487,12 +517,14 @@ def plot_line(target, region, country, year):
 
     return (
         (line_chart + text)
+        .configure(padding={"left": 50, "right": 0})
         .configure_view(strokeWidth=0)
         .configure_axis(
             labelFontSize=14,
             titleFontSize=14,
         )
         .configure_legend(titleFontSize=14)
+        .configure_title(fontSize=20, anchor="start", color="#5C0029")
         .to_html()
     )
 
