@@ -77,6 +77,11 @@ filter_panel = [
         options=opt_dropdown_targets,
         className="dropdown",
     ),
+    html.H5("Interpretation of Target of Study:"),
+    html.H5("- Income is GDP per capita adjusted for purchasing power"),
+    html.H5("- Children per Woman is the number of children born to each woman"),
+    html.H5("- Child Mortality is deaths of children under 5 years per 1000 live births"),
+    html.H5("- Population Density is average number of people per km2"),
     html.H5("Region"),
     dcc.RadioItems(
         id="region_input",
