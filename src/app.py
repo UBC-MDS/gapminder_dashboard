@@ -69,6 +69,7 @@ filter_panel = [
         value="life_expectancy",
         options=opt_dropdown_targets,
         className="dropdown",
+        clearable=False,
     ),
     html.Br(),
     dcc.Dropdown(
@@ -76,6 +77,7 @@ filter_panel = [
         value="income",
         options=opt_dropdown_targets,
         className="dropdown",
+        clearable=False,
     ),
     html.H5("Region"),
     dcc.RadioItems(
@@ -88,8 +90,9 @@ filter_panel = [
     html.H5("Country"),
     dcc.Dropdown(
         id="country_input",
-        value="Afghanistan",
+        value="Angola",
         className="dropdown",
+        clearable=False,
     ),
     html.Br(),
     html.H5("Year"),
