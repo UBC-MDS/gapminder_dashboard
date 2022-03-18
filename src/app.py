@@ -323,6 +323,7 @@ def plot_lifeexp_gdp(year, region, target_y, target_x):
             y=alt.Y(target_y, title=y_title),
             color=alt.Color("region", title="Region"),
             size=alt.Size("population", title="Population"),
+            tooltip = ['name', target_x, target_y]
         )
         .configure_axis(labelFontSize=14, titleFontSize=14)
         .configure_legend(titleFontSize=14, titleColor="#5C0029")
