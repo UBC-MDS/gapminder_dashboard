@@ -40,12 +40,12 @@ opt_radio_regions = [
 
 # Selection filter options - Target of the study
 opt_dropdown_targets = [
-    {"label": "Population", "value": "population"},
-    {"label": "GDP", "value": "income"},
-    {"label": "Life Expectancy", "value": "life_expectancy"},
-    {"label": "Children per woman", "value": "children_per_woman"},
-    {"label": "Child Mortality", "value": "child_mortality"},
-    {"label": "Population density", "value": "pop_density"},
+    {"label": "Population", "value": "population (number of people)"},
+    {"label": "GDP", "value": "income (USD)"},
+    {"label": "Life Expectancy", "value": "life_expectancy (years)"},
+    {"label": "Children per woman", "value": "children_per_woman (number)"},
+    {"label": "Child Mortality", "value": "child_mortality (death per 1000)"},
+    {"label": "Population density", "value": "pop_density (people per km2)"},
 ]
 
 # Selection filter country
