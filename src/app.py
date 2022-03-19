@@ -63,7 +63,7 @@ filter_panel = [
     html.Br(),
     #### Add LHS selection filters here
     html.H3("Filters"),
-    html.H5("Target of Study"),
+    html.H4("Target of Study"),
     dcc.Dropdown(
         id="target_input_y",
         value="life_expectancy",
@@ -79,7 +79,13 @@ filter_panel = [
         className="dropdown",
         clearable=False,
     ),
-    html.H5("Region"),
+    html.H5("Interpretation of Target of Study:"),
+    html.H5("- Population is number of people living"),
+    html.H5("- Income is GDP per capita adjusted for purchasing power"),
+    html.H5("- Children per Woman is the number of children born to each woman"),
+    html.H5("- Child Mortality is deaths of children under 5 years per 1000 live births"),
+    html.H5("- Population Density is average number of people per km2"),
+    html.H4("Region"),
     dcc.RadioItems(
         id="region_input",
         value="Africa",
@@ -87,7 +93,7 @@ filter_panel = [
         className="radio",
     ),
     html.Br(),
-    html.H5("Country"),
+    html.H4("Country"),
     dcc.Dropdown(
         id="country_input",
         value="Angola",
@@ -95,7 +101,7 @@ filter_panel = [
         clearable=False,
     ),
     html.Br(),
-    html.H5("Year"),
+    html.H4("Year"),
     dcc.Slider(
         id="year_input",
         min=1950,
