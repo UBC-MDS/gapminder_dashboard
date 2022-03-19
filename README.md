@@ -1,6 +1,6 @@
 # Gapminder dashboard
 
-![app_usage](https://user-images.githubusercontent.com/88474134/156894591-9d7a9b26-01a1-4a10-b6b5-a4979539040f.gif)
+![app](https://user-images.githubusercontent.com/88474134/159116012-0c261fb2-d190-41f2-b354-706fddf24443.gif)
 
 ## Description of the app
 
