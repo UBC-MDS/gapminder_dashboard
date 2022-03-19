@@ -2,7 +2,7 @@
 
 ![app_usage](https://user-images.githubusercontent.com/88474134/156894591-9d7a9b26-01a1-4a10-b6b5-a4979539040f.gif)
 
-## Decription of the app
+## Description of the app
 
 The Gapminder dataset is a great source of information to learn about the world. The main objective of this app is to investigate what the young population of students know and don’t know about basic global patterns and macro-trends and educate the intended users on global development trends. This dashboard has been developed to communicate insights about historical social/economic trends and create a better understanding of using and teaching statistics.
 
